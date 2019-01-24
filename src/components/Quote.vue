@@ -18,7 +18,9 @@ export default {
   methods: {
     change(author) {
       this.isLiked = !this.isLiked;
-      this.$emit("add-author", author);
+      if (this.isLiked) {
+        this.$emit("add-author", author);
+      } else this.$emit("del-author", author);
     }
   }
 };

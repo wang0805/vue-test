@@ -2,14 +2,15 @@
   <div class="authors-container">
     <h3>Favorite Authors</h3>
     <ul>
-      <li>Johann Wolfgang von Goethe</li>
+      <li v-bind:key="author" v-for="author in authors">{{author}}</li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Fav"
+  name: "Fav",
+  props: ["authors"]
 };
 </script>
 

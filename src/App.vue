@@ -2,8 +2,8 @@
   <div id="app">
     <div class="container">
       <Header/>
-      <Fav/>
-      <Quotes v-bind:quotes="quotes"></Quotes>
+      <Fav v-bind:authors="favAuthors"/>
+      <Quotes v-bind:quotes="quotes" v-on:add-author="addAuthor" v-on:del-author="delAuthor"></Quotes>
     </div>
   </div>
 </template>
@@ -23,8 +23,18 @@ export default {
   },
   data() {
     return {
-      quotes: []
+      quotes: [],
+      favAuthors: []
     };
+  },
+  methods: {
+    addAuthor(author) {
+      this.favAuthors.push(author);
+    },
+    delAuthor(author) {
+      const index = this.favAuthors.indexOf(author);
+      this.favAuthors.splice(index, 1);
+    }
   },
   created() {
     axios.get("http://localhost:3001/").then(res => {
