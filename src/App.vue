@@ -8,6 +8,12 @@
       <Fav v-bind:authors="favAuthors"/>
       <Quotes v-bind:quotes="quotes" v-on:add-author="addAuthor" v-on:del-author="delAuthor"></Quotes>
     </div>
+    <Footer
+      v-bind:change="change"
+      v-bind:pages="pages"
+      v-bind:page="page"
+      v-on:change-page="changePage"
+    />
   </div>
 </template>
 
@@ -15,19 +21,28 @@
 import axios from "axios";
 import Fav from "./components/Fav";
 import Quotes from "./components/Quotes";
+import Footer from "./components/Footer";
 
 export default {
   name: "app",
   components: {
     Fav,
-    Quotes
+    Quotes,
+    Footer
   },
   data() {
     return {
+      //quotes is everchanging according to page numnber and search
       quotes: [],
       favAuthors: [],
       search: "",
-      result: []
+      //result is to keep a record of the original array
+      result: [],
+      //change is created for monitoring search bar
+      change: [],
+      pages: 0,
+      //props for footer
+      page: 0
     };
   },
   methods: {
@@ -40,18 +55,46 @@ export default {
     },
     changeAuthor() {
       //uses watch instead for autocomplete
+    },
+    changePage({ page, change }) {
+      // console.log(page, change, "checking object emitted");
+      this.quotes = [];
+      if (page <= this.pages) {
+        for (let i = 0; i < 6; i++) {
+          this.quotes = [...this.quotes, change[page * 6 + i]];
+        }
+      }
     }
   },
   watch: {
     search(newSearch, oldSearch) {
-      this.quotes = [...this.result];
-      this.quotes = this.quotes.filter(c => c.author.includes(this.search));
+      this.change = [...this.result];
+      this.change = this.change.filter(c => c.author.includes(this.search));
+      if (this.change.length % 6 !== 0) {
+        this.pages = parseInt(this.change.length / 6);
+      } else {
+        this.pages = parseInt(this.change.length / 6 - 1);
+      }
+      console.log(this.pages);
+      this.quotes = [];
+      for (let i = 0; i < 6; i++) {
+        this.quotes = [...this.quotes, this.change[i]];
+      }
     }
   },
   created() {
     axios.get("http://localhost:3001/").then(res => {
-      this.quotes = res.data;
       this.result = res.data;
+      this.change = res.data;
+      if (this.result.length % 6 !== 0) {
+        this.pages = parseInt(this.result.length / 6);
+      } else {
+        this.pages = parseInt(this.result.length / 6 - 1);
+      }
+      //page 0 be first 6 items
+      for (let i = 0; i < 6; i++) {
+        this.quotes = [...this.quotes, this.result[i]];
+      }
     });
   }
 };

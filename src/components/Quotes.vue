@@ -1,6 +1,6 @@
 <template>
   <div class="quotes-container">
-    <div v-bind:key="quote" v-for="quote in quotes">
+    <div v-bind:key="quote.quote" v-for="quote in quotes">
       <Quote
         v-bind:quote="quote"
         v-on:add-author="$emit('add-author',quote.author)"
