@@ -1,0 +1,22 @@
+<template>
+  <div class="quotes-container">
+    <div v-bind:key="quote" v-for="quote in quotes">
+      <Quote v-bind:quote="quote"/>
+    </div>
+  </div>
+</template>
+
+<script>
+import Quote from "./Quote";
+
+export default {
+  name: "Quotes",
+  components: {
+    Quote
+  },
+  props: ["quotes"]
+};
+</script>
+
+<style>
+</style>

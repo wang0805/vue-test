@@ -1,0 +1,11 @@
+{
+  "name": "vue-beginner-quotes-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "server": "node server"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

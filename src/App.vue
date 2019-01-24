@@ -1,28 +1,133 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="container">
+      <Header/>
+      <Fav/>
+      <Quotes v-bind:quotes="quotes"></Quotes>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from "axios";
+import Header from "./components/Header";
+import Fav from "./components/Fav";
+import Quotes from "./components/Quotes";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
-    HelloWorld
+    Header,
+    Fav,
+    Quotes
+  },
+  data() {
+    return {
+      quotes: []
+    };
+  },
+  created() {
+    axios.get("http://localhost:3001/").then(res => {
+      this.quotes = res.data;
+    });
   }
-}
+};
 </script>
 
 <style>
+.title {
+  display: flex;
+  align-items: center;
+}
+
+input {
+  height: 20px;
+  width: 150px;
+  margin-left: auto;
+}
+
+.title h1 {
+  margin-left: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.quotes-container {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 5px;
+  margin-bottom: 50px;
+  min-height: 400px;
+}
+
+@media screen and (max-width: 550px) {
+  .quotes-container {
+    display: block;
+  }
+}
+
+.authors-container {
+  text-align: left;
+}
+
+/* This is for the Navbar */
+.nav-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+}
+
+button {
+  background-color: gray;
+  color: #fff;
+  padding: 20px;
+  font-size: 15px;
+  border-radius: 0;
+}
+
+.disabled {
+  background: lightgray;
+}
+
+/* This is for quotes */
+.quote {
+  border: 1px solid #333;
+  padding: 10px;
+  min-height: 200px;
+}
+
+.quote-like {
+  margin-left: 20px;
+  padding: 10px;
+  border: 1px block grey;
+  background: none;
+  color: black;
+  font-size: 12px;
+}
+
+.quote-like.active {
+  background-color: #fab1a0;
+}
+
+/* This is for App.vue */
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
+}
+
+body {
+  padding: 20px;
 }
 </style>
