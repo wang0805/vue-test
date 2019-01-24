@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <div class="container">
-      <Header/>
+      <div class="title">
+        <h1>Best quotes of the world</h1>
+        <input type="text" v-model="search" placeholder="Author..." v-on:change="changeAuthor">
+      </div>
       <Fav v-bind:authors="favAuthors"/>
       <Quotes v-bind:quotes="quotes" v-on:add-author="addAuthor" v-on:del-author="delAuthor"></Quotes>
     </div>
@@ -10,21 +13,21 @@
 
 <script>
 import axios from "axios";
-import Header from "./components/Header";
 import Fav from "./components/Fav";
 import Quotes from "./components/Quotes";
 
 export default {
   name: "app",
   components: {
-    Header,
     Fav,
     Quotes
   },
   data() {
     return {
       quotes: [],
-      favAuthors: []
+      favAuthors: [],
+      search: "",
+      result: []
     };
   },
   methods: {
@@ -34,11 +37,21 @@ export default {
     delAuthor(author) {
       const index = this.favAuthors.indexOf(author);
       this.favAuthors.splice(index, 1);
+    },
+    changeAuthor() {
+      //uses watch instead for autocomplete
+    }
+  },
+  watch: {
+    search(newSearch, oldSearch) {
+      this.quotes = [...this.result];
+      this.quotes = this.quotes.filter(c => c.author.includes(this.search));
     }
   },
   created() {
     axios.get("http://localhost:3001/").then(res => {
       this.quotes = res.data;
+      this.result = res.data;
     });
   }
 };
