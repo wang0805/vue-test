@@ -56,18 +56,22 @@ export default {
     changeAuthor() {
       //uses watch instead for autocomplete
     },
-    changePage({ page, change }) {
+    changePage(change) {
       // console.log(page, change, "checking object emitted");
       this.quotes = [];
-      if (page <= this.pages) {
+      if (this.$store.state.page <= this.pages) {
         for (let i = 0; i < 6; i++) {
-          this.quotes = [...this.quotes, change[page * 6 + i]];
+          this.quotes = [
+            ...this.quotes,
+            change[this.$store.state.page * 6 + i]
+          ];
         }
       }
     }
   },
   watch: {
     search(newSearch, oldSearch) {
+      this.$store.commit("setZero", 0);
       this.change = [...this.result];
       this.change = this.change.filter(c => c.author.includes(this.search));
       if (this.change.length % 6 !== 0) {
@@ -75,7 +79,6 @@ export default {
       } else {
         this.pages = parseInt(this.change.length / 6 - 1);
       }
-      console.log(this.pages);
       this.quotes = [];
       for (let i = 0; i < 6; i++) {
         this.quotes = [...this.quotes, this.change[i]];

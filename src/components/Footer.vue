@@ -5,7 +5,7 @@
       v-bind:class="{'disabled':isDisabled}"
       v-bind:disabled="isDisabled"
     >&lt;- Prev</button>
-    <span>{{page}}</span>
+    <span>{{this.$store.state.page}}</span>
     <button
       v-bind:class="{'disabled':upDisabled}"
       @click="increment(pages, change)"
@@ -20,7 +20,6 @@ export default {
   props: ["pages", "change"],
   data() {
     return {
-      page: 0,
       // this is for min pages
       isDisabled: true,
       // this is for max pages
@@ -29,20 +28,20 @@ export default {
   },
   methods: {
     increment(pages, change) {
-      this.page++;
+      this.$store.commit("increment");
       this.isDisabled = false;
-      if (this.page >= pages) {
+      if (this.$store.state.page >= pages) {
         this.upDisabled = true;
       }
-      this.$emit("change-page", { page: this.page, change: change });
+      this.$emit("change-page", change);
     },
     decrement(change) {
-      this.page--;
+      this.$store.commit("decrement");
       this.upDisabled = false;
-      if (this.page < 1) {
+      if (this.$store.state.page < 1) {
         this.isDisabled = true;
       }
-      this.$emit("change-page", this.page, change);
+      this.$emit("change-page", change);
     }
   }
 };
