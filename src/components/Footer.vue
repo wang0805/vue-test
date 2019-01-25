@@ -2,14 +2,14 @@
   <div class="nav-button">
     <button
       @click="decrement(change)"
-      v-bind:class="{'disabled':isDisabled}"
-      v-bind:disabled="isDisabled"
+      v-bind:class="{'disabled':this.$store.state.isDisabled}"
+      v-bind:disabled="this.$store.state.isDisabled"
     >&lt;- Prev</button>
     <span>{{this.$store.state.page}}</span>
     <button
-      v-bind:class="{'disabled':upDisabled}"
+      v-bind:class="{'disabled':this.$store.state.upDisabled}"
       @click="increment(pages, change)"
-      v-bind:disabled="upDisabled"
+      v-bind:disabled="this.$store.state.upDisabled"
     >Next -&gt;</button>
   </div>
 </template>
@@ -20,26 +20,27 @@ export default {
   props: ["pages", "change"],
   data() {
     return {
-      // this is for min pages
-      isDisabled: true,
-      // this is for max pages
-      upDisabled: false
+      // moved to vuex instead to fix disabled style sticking bug
+      //   // this is for min pages
+      //   isDisabled: true,
+      //   // this is for max pages
+      //   upDisabled: false
     };
   },
   methods: {
     increment(pages, change) {
       this.$store.commit("increment");
-      this.isDisabled = false;
+      this.$store.commit("setIsDisabled", false);
       if (this.$store.state.page >= pages) {
-        this.upDisabled = true;
+        this.$store.commit("setUpDisabled", true);
       }
       this.$emit("change-page", change);
     },
     decrement(change) {
       this.$store.commit("decrement");
-      this.upDisabled = false;
+      this.$store.commit("setUpDisabled", false);
       if (this.$store.state.page < 1) {
-        this.isDisabled = true;
+        this.$store.commit("setIsDisabled", true);
       }
       this.$emit("change-page", change);
     }

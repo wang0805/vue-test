@@ -71,7 +71,11 @@ export default {
   },
   watch: {
     search(newSearch, oldSearch) {
+      //reset when theres a search
       this.$store.commit("setZero", 0);
+      this.$store.commit("setIsDisabled", true);
+      this.$store.commit("setUpDisabled", false);
+
       this.change = [...this.result];
       this.change = this.change.filter(c => c.author.includes(this.search));
       if (this.change.length % 6 !== 0) {
